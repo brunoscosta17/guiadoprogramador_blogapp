@@ -1,0 +1,13 @@
+<div class="card">
+    <h3>New Category</h3>
+    <div class="card-body">
+        <form action="/admin/categories/new" method="post">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" placeholder="Category" class="form-control">
+            <label for="slug">Slug:</label>
+            <input type="text" name="slug" id="slug" placeholder="Slug" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-primary">Create Category</button>
+        </form>
+    </div>
+</div>

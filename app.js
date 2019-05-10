@@ -4,6 +4,8 @@ const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
 const app = express();
 //const mongoose = require('mongoose');
+const admin = require('./routes/admin');
+const path = require('path');
 
 // Configurations
     // Body Parser
@@ -16,8 +18,12 @@ const app = express();
 
     // Mongoose
 
-// Routes
+    // Public
+    app.use(express.static(path.join(__dirname,'public')));
 
+// Routes
+app.use('/admin', admin);
+app.use('admin/categories', admin);
 
 // Others
 const PORT = 8081;
