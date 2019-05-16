@@ -12,14 +12,14 @@ const flash = require('connect-flash');
 // Configurations
     // Session
         app.use(session({
-            secret: "cursonode",
+            secret: "blogapp",
             resave: true,
             saveUninitialized: true
         }));
         app.use(flash());
     // Middleware
     app.use((req, res, next) => {
-        res.locals.success_msg = req.flash('seccess_msg');
+        res.locals.success_msg = req.flash('success_msg');
         res.locals.error_msg = req.flash('error_msg');
         next();
     });
