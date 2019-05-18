@@ -8,6 +8,12 @@
         <small>{{slug}}</small>
         <small>{{createdAt}}</small>
         <a href="/admin/categories/edit/{{_id}}"><button class="btn btn-success mt-3">Edit</button></a>
+        
+        <form action="/admin/categories/delete" method="POST">
+            <input type="hidden" name="id" value="{{_id}}">
+            <button type="submit" class="btn btn-danger mt-2">Delete</button>
+        </form>
     </div>
     {{else}}
+    <h4 class="mt-2">Nenhuma categoria registrada!</h4>
 {{/each}}

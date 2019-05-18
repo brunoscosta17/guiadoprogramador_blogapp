@@ -115,7 +115,17 @@ router.post('/categories/edit', (req, res) => {
                 res.redirect("/admin/categories");
             });
     }
+});
 
+router.post('/categories/delete', (req, res) => {
+    Category.deleteOne({_id: req.body.id})
+        .then(() => {
+            req.flash("success_msg", `Categoria deletada com sucesso!`);
+            res.redirect("/admin/categories");
+        }).catch((error) => {
+            req.flash("error_msg", "Erro ao deletar a categoria!");
+            res.redirect("/admin/categories");
+        });
 });
 
 module.exports = router;
