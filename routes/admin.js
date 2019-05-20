@@ -8,10 +8,6 @@ router.get('/', (req, res) => {
     res.render('admin/index');
 });
 
-router.get('/posts', (req, res) => {
-    res.redirect();
-});
-
 router.get('/categories', (req, res) => {
     Category.find().sort({ createdAt: 'desc' })
         .then((categories) => {
@@ -22,11 +18,11 @@ router.get('/categories', (req, res) => {
         })
 });
 
-router.get('/categories/add', (req, res) => {
+router.get('/category/add', (req, res) => {
     res.render('admin/addcategory');
 });
 
-router.post('/categories/new', (req, res) => {
+router.post('/category/new', (req, res) => {
 
     let errors = [];
 
@@ -101,14 +97,14 @@ router.post('/categories/edit', (req, res) => {
                 category.name = req.body.name
                 category.slug = req.body.slug
 
-                    category.save()
-                        .then(() => {
-                            req.flash("success_msg", "Categoria editada com sucesso!");
-                            res.redirect("/admin/categories");
-                        }).catch((error) => {
-                            req.flash("error_msg", "Errro ao salvar a edicao da categoria!");
-                            res.redirect("/admin/categories");
-                        });
+                category.save()
+                    .then(() => {
+                        req.flash("success_msg", "Categoria editada com sucesso!");
+                        res.redirect("/admin/categories");
+                    }).catch((error) => {
+                        req.flash("error_msg", "Errro ao salvar a edicao da categoria!");
+                        res.redirect("/admin/categories");
+                    });
             }).catch((error) => {
                 console.log(error);
                 req.flash("error_msg", "Erro ao editar a categoria!");
@@ -118,13 +114,27 @@ router.post('/categories/edit', (req, res) => {
 });
 
 router.post('/categories/delete', (req, res) => {
-    Category.deleteOne({_id: req.body.id})
+    Category.deleteOne({ _id: req.body.id })
         .then(() => {
             req.flash("success_msg", `Categoria deletada com sucesso!`);
             res.redirect("/admin/categories");
         }).catch((error) => {
             req.flash("error_msg", "Erro ao deletar a categoria!");
             res.redirect("/admin/categories");
+        });
+});
+
+router.get('/posts', (req, res) => {
+    res.render('admin/posts');
+});
+
+router.get('/post/add', (req, res) => {
+    Category.find()
+        .then((categories) => {
+            res.render('admin/addpost', {categories: categories});
+        }).catch((error) => {
+            req.flash("error_msg", "Erro ao carregar formulario!");
+            res.redirect('/admin');
         });
 });
 
