@@ -301,4 +301,30 @@ router.post('/post/save', (req, res) => {
     }
 });
 
+// router.get('/posts/delete/:id', (req, res) => {
+//     Post.remove({_id: req.params.id})
+//         .then(() => {
+//             req.flash("success_msg", `Post deletado com sucesso!`);
+//             res.redirect('/admin/posts');
+//         })
+//         .catch((error) => {
+//             console.log(error);
+//             req.flash("msg_error", "Erro ao excluir este post!");
+//             res.redirect("/admin/posts");
+//         });
+// });
+
+router.post('/posts/delete', (req, res) => {
+    Post.deleteOne({ _id: req.body.id })
+        .then(() => {
+            req.flash("success_msg", `Post deletado com sucesso!`);
+            res.redirect('/admin/posts');
+        })
+        .catch((error) => {
+            console.log(error);
+            req.flash("msg_error", "Erro ao excluir este post!");
+            res.redirect("/admin/posts");
+        });
+});
+
 module.exports = router;
