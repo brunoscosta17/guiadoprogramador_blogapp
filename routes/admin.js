@@ -127,7 +127,13 @@ router.post('/categories/delete', (req, res) => {
 });
 
 router.get('/posts', (req, res) => {
-    res.render('admin/posts');
+    Post.find().populate('category').sort({data: 'desc'})
+        .then((post) => {
+            res.render('admin/posts', {post: post});
+        }).catch((error) => {
+            req.flash("error_msg", "Erro ao listar os posts!");
+            res.redirect("/admin");
+        })
 });
 
 router.get('/post/add', (req, res) => {
