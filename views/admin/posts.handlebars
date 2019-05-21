@@ -8,8 +8,8 @@
         <h4>{{title}}</h4>
         <p>Description: {{description}}</p>
         <small>Category: {{category.name}}</small>
-        <small>Date: {{createdAt}}</small>
-        <a href="/admin/post/edit/{{_id}}"><button class="btn btn-success mt-3">Edit</button></a>
+        <small>Date: {{createdAt}}</small><br>
+        <a href="/admin/posts/edit/{{_id}}"><button class="btn btn-success mt-3">Edit</button></a>
         
         <form action="/admin/posts/delete" method="POST">
             <input type="hidden" name="id" value="{{_id}}">
