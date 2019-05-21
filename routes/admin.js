@@ -3,6 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 require('../models/Category');
 const Category = mongoose.model('category');
+require('../models/Post');
+const Post = mongoose.model('post');
 
 router.get('/', (req, res) => {
     res.render('admin/index');
@@ -38,7 +40,7 @@ router.post('/category/new', (req, res) => {
         errors.push({ error: "O nome deve ter ao menos 3 caracteres!" })
     }
 
-    if (req.body.name.length < 3) {
+    if (req.body.slug.length < 3) {
         errors.push({ error: "O slug deve ter ao menos 3 caracteres!" })
     }
 
@@ -87,7 +89,7 @@ router.post('/categories/edit', (req, res) => {
         errors.push({ error: "O nome deve ter ao menos 3 caracteres!" })
     }
 
-    if (req.body.name.length < 3) {
+    if (req.body.slug.length < 3) {
         errors.push({ error: "O slug deve ter ao menos 3 caracteres!" })
     } if (errors.length > 0) {
         res.render("admin/addcategory", { errors: errors });
@@ -136,6 +138,69 @@ router.get('/post/add', (req, res) => {
             req.flash("error_msg", "Erro ao carregar formulario!");
             res.redirect('/admin');
         });
+});
+
+router.post('/post/new', (req, res) => {
+    
+    let errors = [];
+
+    if (req.body.category == "0") {
+        errors.push("Selecione ao menos uma categoria!");
+    }
+
+    if (!req.body.title || typeof req.body.title == undefined || req.body.title == null) {
+        errors.push({ error: "Title invalido!" })
+    }
+
+    if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null) {
+        errors.push({ error: "Slug invalido!" })
+    }
+
+    if (!req.body.description || typeof req.body.description == undefined || req.body.description == null) {
+        errors.push({ error: "Description invalido!" })
+    }
+
+    if (!req.body.content || typeof req.body.content == undefined || req.body.content == null) {
+        errors.push({ error: "Content invalido!" })
+    }
+
+    if (req.body.title.length < 3) {
+        errors.push({ error: "O title deve ter ao menos 3 caracteres!" })
+    }
+
+    if (req.body.slug.length < 3) {
+        errors.push({ error: "O slug deve ter ao menos 3 caracteres!" })
+    }
+
+    if (req.body.slug.description < 3) {
+        errors.push({ error: "A description deve ter ao menos 3 caracteres!" })
+    }
+
+    if (req.body.slug.content < 3) {
+        errors.push({ error: "O content deve ter ao menos 3 caracteres!" })
+    }
+
+    if (errors.length > 0) {
+        res.render("admin/addpost", { error: errors });
+    } else {
+        const newPost = {
+            title: req.body.title,
+            slug: req.body.slug,
+            description: req.body.description,
+            content: req.body.content,
+            category: req.body.category
+        }
+
+        new Post(newPost).save()
+            .then(() => {
+                req.flash("success_msg", "Post criado com sucesso!");
+                res.redirect("/admin/posts");
+            })
+            .catch((error) => {
+                req.flash("error_msg", "Erro ao salvar o post!");
+                res.redirect("/admin/posts");
+            });
+    }
 });
 
 module.exports = router;
