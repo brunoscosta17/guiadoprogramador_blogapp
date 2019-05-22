@@ -10,6 +10,8 @@ const session = require('express-session');
 const flash = require('connect-flash');
 require('./models/Post');
 const Post = mongoose.model('post');
+require('./models/Category');
+const Category = mongoose.model('category');
 
 // Configurations
 // Session
@@ -75,6 +77,40 @@ app.get('/post/:slug', (req, res) => {
             res.redirect('/');
         })
 });
+
+app.get('/categories', (req, res) => {
+    Category.find()
+        .then((categories) => {
+            res.render('categories/index', { categories: categories });
+        }).catch((error) => {
+            console.log(error);
+            req.flash("error_msg", "Erro ao listar as categorias!");
+        })
+});
+
+
+app.get('/categories/:slug', (req, res) => {
+    Category.findOne({ slug: req.params.slug })
+        .then((category) => {
+            if (category) {
+                Post.find({ category: category._id })
+                    .then((posts) => {
+                        res.render('categories/posts', { posts: posts, category: category })
+                    }).catch((error) => {
+                        console.log(error);
+                        req.flash("error_msg", "Erro ao listar este post!");
+                        res.redirect('/');
+                    });
+            } else {
+                req.flash("error_msg", "Categoria inexistente!");
+                res.redirect('/');
+            }
+        }).catch((error) => {
+            console.log(error);
+            req.flash("error_msg", "Erro ao carregar esta categoria!");
+        });
+});
+
 
 app.use('/admin', admin);
 
