@@ -2,7 +2,7 @@
     <div class="card-body">
         <h1>{{post.title}}</h1>
         <hr>
-        <small>Date: {{post.createdAt}}</small><br>
+        <small>Date: {{#formatDate post.createdAt}}{{/formatDate}}</small><br>
         <hr>
         <small>{{post.content}}</small>
     </div>

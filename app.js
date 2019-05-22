@@ -12,6 +12,7 @@ require('./models/Post');
 const Post = mongoose.model('post');
 require('./models/Category');
 const Category = mongoose.model('category');
+const moment = require('moment');
 
 // Configurations
 // Session
@@ -32,8 +33,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Handlebars
-app.engine('handlebars', handlebars({ defaultLayout: 'main' }));
+app.engine('handlebars', handlebars({ 
+    defaultLayout: 'main' 
+}));
 app.set('view engine', 'handlebars');
+app.engine('handlebars', handlebars({
+    defaultLayout: 'main',
+    helpers: {
+        formatDate: (date) => {
+            return moment(date).format('DD/MM/YYYY')
+        }
+    }
+}));
 
 // Mongoose
 mongoose.Promise = global.Promise;

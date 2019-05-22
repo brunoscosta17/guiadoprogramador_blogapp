@@ -18,7 +18,7 @@
         <a href="/post/{{slug}}"><button class="btn btn-success">Read more...</button></a>
         <hr>
         <small>Category: {{category.name}}</small><br>
-        <small>Publication date: {{category.createdAt}}</small>
+        <small>Date: {{#formatDate category.createdAt}}{{/formatDate}}</small><br>
     </div>
 </div>
 {{else}}
