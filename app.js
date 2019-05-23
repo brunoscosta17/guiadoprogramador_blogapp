@@ -13,6 +13,7 @@ const Post = mongoose.model('post');
 require('./models/Category');
 const Category = mongoose.model('category');
 const moment = require('moment');
+const user = require("./routes/user");
 
 // Configurations
 // Session
@@ -124,7 +125,7 @@ app.get('/categories/:slug', (req, res) => {
 
 
 app.use('/admin', admin);
-
+app.use("/users", user);
 app.use('admin/categories', admin);
 
 // Others
