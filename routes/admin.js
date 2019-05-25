@@ -5,12 +5,13 @@ require('../models/Category');
 const Category = mongoose.model('category');
 require('../models/Post');
 const Post = mongoose.model('post');
+const {isAdmin} = require("../helpers/isAdmin");
 
-router.get('/', (req, res) => {
+router.get('/', isAdmin, (req, res) => {
     res.render('admin/index');
 });
 
-router.get('/categories', (req, res) => {
+router.get('/categories', isAdmin, (req, res) => {
     Category.find().sort({ createdAt: 'desc' })
         .then((categories) => {
             res.render('admin/categories', { categories: categories });
@@ -21,11 +22,11 @@ router.get('/categories', (req, res) => {
         })
 });
 
-router.get('/category/add', (req, res) => {
+router.get('/category/add', isAdmin, (req, res) => {
     res.render('admin/addcategory');
 });
 
-router.post('/category/new', (req, res) => {
+router.post('/category/new', isAdmin, (req, res) => {
 
     let errors = [];
 
@@ -65,7 +66,7 @@ router.post('/category/new', (req, res) => {
     }
 });
 
-router.get('/categories/edit/:id', (req, res) => {
+router.get('/categories/edit/:id', isAdmin, (req, res) => {
     Category.findOne({ _id: req.params.id })
         .then((category) => {
             res.render('admin/editcategory', { category: category });
@@ -76,7 +77,7 @@ router.get('/categories/edit/:id', (req, res) => {
         });
 });
 
-router.post('/categories/save', (req, res) => {
+router.post('/categories/save', isAdmin, (req, res) => {
 
     let errors = [];
 
@@ -118,7 +119,7 @@ router.post('/categories/save', (req, res) => {
     }
 });
 
-router.post('/categories/delete', (req, res) => {
+router.post('/categories/delete', isAdmin, (req, res) => {
     Category.deleteOne({ _id: req.body.id })
         .then(() => {
             req.flash("success_msg", `Categoria deletada com sucesso!`);
@@ -130,7 +131,7 @@ router.post('/categories/delete', (req, res) => {
         });
 });
 
-router.get('/posts', (req, res) => {
+router.get('/posts', isAdmin, (req, res) => {
     Post.find().populate('category').sort({ data: 'desc' })
         .then((post) => {
             res.render('admin/posts', { post: post });
@@ -141,7 +142,7 @@ router.get('/posts', (req, res) => {
         })
 });
 
-router.get('/post/add', (req, res) => {
+router.get('/post/add', isAdmin, (req, res) => {
     Category.find()
         .then((categories) => {
             res.render('admin/addpost', { categories: categories });
@@ -152,7 +153,7 @@ router.get('/post/add', (req, res) => {
         });
 });
 
-router.post('/post/new', (req, res) => {
+router.post('/post/new', isAdmin, (req, res) => {
 
     let errors = [];
 
@@ -215,7 +216,7 @@ router.post('/post/new', (req, res) => {
     }
 });
 
-router.get('/posts/edit/:id', (req, res) => {
+router.get('/posts/edit/:id', isAdmin, (req, res) => {
 
     Post.findOne({ _id: req.params.id })
         .then((post) => {
@@ -234,7 +235,7 @@ router.get('/posts/edit/:id', (req, res) => {
         });
 });
 
-router.post('/post/save', (req, res) => {
+router.post('/post/save', isAdmin, (req, res) => {
 
     let errors = [];
 
@@ -314,7 +315,7 @@ router.post('/post/save', (req, res) => {
 //         });
 // });
 
-router.post('/posts/delete', (req, res) => {
+router.post('/posts/delete', isAdmin, (req, res) => {
     Post.deleteOne({ _id: req.body.id })
         .then(() => {
             req.flash("success_msg", `Post deletado com sucesso!`);
