@@ -16,6 +16,7 @@ const moment = require('moment');
 const user = require("./routes/user");
 const passport = require("passport");
 require("./config/auth")(passport);
+const db = require("./config/db");
 
 // Configurations
 // Session
@@ -57,11 +58,11 @@ app.engine('handlebars', handlebars({
 
 // Mongoose
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/blogapp")
+mongoose.connect(db.mongoURI)
     .then(() => {
-        console.log("Conectado ao mongodb!");
+        console.log("Conected to Mongodb!");
     }).catch((error) => {
-        console.log("Erro ao se conectar ao mongo", error);
+        console.log("Error connecting to Mongodb", error);
     });
 
 // Public
@@ -73,7 +74,7 @@ app.get('/', (req, res) => {
         .then((posts) => {
             res.render('index', { posts: posts });
         }).catch((error) => {
-            req.flash('error_msg', "Houve um erro interno!");
+            req.flash('error_msg', "There was an internal error!");
             res.redirect('/404');
         });
 });
@@ -88,12 +89,12 @@ app.get('/post/:slug', (req, res) => {
             if (post) {
                 res.render('post/index', { post: post });
             } else {
-                req.flash('error_msg', "Esta postagem não existe!");
+                req.flash('error_msg', "This post doesn't exist!");
                 res.redirect('/');
             }
         }).catch((error) => {
             console.log(error);
-            req.flash("error_msg", "Erro ao buscar a postagem!");
+            req.flash("error_msg", "Error fetching post!");
             res.redirect('/');
         })
 });
@@ -104,7 +105,7 @@ app.get('/categories', (req, res) => {
             res.render('categories/index', { categories: categories });
         }).catch((error) => {
             console.log(error);
-            req.flash("error_msg", "Erro ao listar as categorias!");
+            req.flash("error_msg", "Error listing categories!");
         })
 });
 
@@ -118,16 +119,16 @@ app.get('/categories/:slug', (req, res) => {
                         res.render('categories/posts', { posts: posts, category: category })
                     }).catch((error) => {
                         console.log(error);
-                        req.flash("error_msg", "Erro ao listar este post!");
+                        req.flash("error_msg", "Error listing this post!");
                         res.redirect('/');
                     });
             } else {
-                req.flash("error_msg", "Categoria inexistente!");
+                req.flash("error_msg", "Category doesn't exist!");
                 res.redirect('/');
             }
         }).catch((error) => {
             console.log(error);
-            req.flash("error_msg", "Erro ao carregar esta categoria!");
+            req.flash("error_msg", "Error loading this category!");
         });
 });
 
@@ -137,7 +138,7 @@ app.use("/users", user);
 app.use('admin/categories', admin);
 
 // Others
-const PORT = 8081;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
-    console.log('Server running on port ', PORT);
+    console.log('Server running on port',PORT);
 });
